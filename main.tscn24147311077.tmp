@@ -1,0 +1,514 @@
+[gd_scene format=3 uid="uid://cojlmnikxkj0m"]
+
+[ext_resource type="Script" uid="uid://canbli241qi3h" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://ct814bkrtaiom" path="res://gfx/Monster/Slime.png" id="2_lquwl"]
+[ext_resource type="Script" uid="uid://dvavqigi4g1ec" path="res://GameData.gd" id="3_272bh"]
+[ext_resource type="Script" uid="uid://bvn1rjdlixbix" path="res://UpgradeMenu.gd" id="3_lquwl"]
+[ext_resource type="Texture2D" uid="uid://ctslx70w8cpb4" path="res://gfx/Pause.png" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://ct6ooo4yynfnc" path="res://gfx/Save.png" id="6_5vw27"]
+[ext_resource type="Texture2D" uid="uid://diajuv305vw6i" path="res://gfx/Plains.jpg" id="6_7mycd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1bvp3"]
+size = Vector2(494, 390)
+
+[sub_resource type="LabelSettings" id="LabelSettings_272bh"]
+font_size = 20
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_272bh"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5vw27"]
+texture = SubResource("MeshTexture_272bh")
+modulate_color = Color(0.84925586, 0.13449883, 0.10016311, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lquwl"]
+font_size = 18
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_kek77"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4c57u"]
+texture = SubResource("MeshTexture_kek77")
+modulate_color = Color(0.88695055, 0.024736969, 0.08750903, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5vw27"]
+font_size = 18
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_efxa6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dg77c"]
+texture = SubResource("MeshTexture_efxa6")
+modulate_color = Color(1, 0.8, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7mycd"]
+font_size = 22
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycdy4"]
+font_size = 24
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w48qg"]
+font_size = 24
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kek77"]
+font_size = 14
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node2D" unique_id=230458472]
+script = ExtResource("1_ig7tw")
+
+[node name="Slime" type="Area2D" parent="." unique_id=148509787]
+unique_name_in_owner = true
+z_index = 5
+
+[node name="SlimeSprite" type="Sprite2D" parent="Slime" unique_id=2128961338]
+unique_name_in_owner = true
+z_index = 1
+z_as_relative = false
+position = Vector2(-3.5762787e-06, 1.0550022e-05)
+scale = Vector2(0.48242188, 0.3808594)
+texture = ExtResource("2_lquwl")
+
+[node name="AttackZone" type="CollisionShape2D" parent="Slime" unique_id=21614607]
+unique_name_in_owner = true
+z_index = 5
+shape = SubResource("RectangleShape2D_1bvp3")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=406937001]
+process_mode = 3
+follow_viewport_enabled = true
+script = ExtResource("3_272bh")
+
+[node name="HUD" type="Control" parent="UI" unique_id=2097296223]
+clip_contents = true
+layout_mode = 3
+anchor_left = -0.763
+anchor_top = -0.762
+anchor_right = 0.763
+anchor_bottom = 0.762
+offset_left = -0.023986816
+offset_top = -0.22399902
+offset_right = 0.023986816
+offset_bottom = 0.22399902
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="UpgradeMenu" type="Panel" parent="UI" unique_id=852211691]
+z_index = 1
+clip_contents = true
+offset_left = 277.0
+offset_top = -494.0
+offset_right = 879.0
+offset_bottom = 494.0
+script = ExtResource("3_lquwl")
+
+[node name="WeaponLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1143218855]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 435.0
+offset_bottom = 31.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="WeaponUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1078709394]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 31.0
+offset_right = 435.0
+offset_bottom = 57.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="WeaponTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=1533945238]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 398.268
+offset_top = 1.0
+offset_right = 448.79
+offset_bottom = 21.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="WeaponLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=2119814546]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 1.0
+offset_right = 536.79
+offset_bottom = 20.132
+text = "Level up"
+
+[node name="HelmetLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1778314248]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 92.0
+offset_right = 435.0
+offset_bottom = 123.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="HelmetUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=325411565]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 123.0
+offset_right = 435.0
+offset_bottom = 149.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="HelmetTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=511331145]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 91.0
+offset_right = 448.79
+offset_bottom = 113.131996
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="HelmetLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=1331846113]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 91.0
+offset_right = 537.79
+offset_bottom = 113.131996
+text = "Level up"
+
+[node name="ChestpieceLabel" type="Label" parent="UI/UpgradeMenu" unique_id=127855950]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 191.0
+offset_right = 435.0
+offset_bottom = 222.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="ChestpieceUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1282324204]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 222.0
+offset_right = 435.0
+offset_bottom = 248.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="ChestpieceTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=1061716567]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 190.0
+offset_right = 448.79
+offset_bottom = 212.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="ChestpieceLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=1602613642]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 190.0
+offset_right = 537.79
+offset_bottom = 212.132
+text = "Level up"
+
+[node name="LeggingsLabel" type="Label" parent="UI/UpgradeMenu" unique_id=108637333]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 309.0
+offset_right = 435.0
+offset_bottom = 340.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="LeggingsUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=748374796]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 340.0
+offset_right = 435.0
+offset_bottom = 366.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="LeggingsTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=920261392]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 308.0
+offset_right = 448.79
+offset_bottom = 330.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="LeggingsLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=322302831]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 308.0
+offset_right = 537.79
+offset_bottom = 330.132
+text = "Level up"
+
+[node name="PauseButton" type="Button" parent="UI/UpgradeMenu" unique_id=1480137156]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 0
+offset_left = 1.0
+offset_top = 852.0
+offset_right = 137.0
+offset_bottom = 988.0
+icon = ExtResource("5_7mycd")
+
+[node name="Info1" type="Label" parent="UI/UpgradeMenu" unique_id=694236091]
+layout_mode = 0
+offset_top = 494.0
+offset_right = 602.0
+offset_bottom = 610.0
+text = "NOTE: Weapon increases your damage, Helmet increases armor, and luck, chestpiece increases your defense also and max health, leggings is armor, regeneration."
+label_settings = SubResource("LabelSettings_272bh")
+autowrap_mode = 2
+clip_text = true
+
+[node name="SaveButton" type="Button" parent="UI/UpgradeMenu" unique_id=549791934]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 0
+offset_left = 137.0
+offset_top = 852.0
+offset_right = 273.0
+offset_bottom = 988.0
+icon = ExtResource("6_5vw27")
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="UI" unique_id=1197304688]
+unique_name_in_owner = true
+offset_left = -878.0
+offset_top = -493.0
+offset_right = -631.0
+offset_bottom = -456.0
+theme_override_styles/background = SubResource("StyleBoxTexture_5vw27")
+show_percentage = false
+
+[node name="PlayerHPLabel" type="Label" parent="UI/PlayerHealthBar" unique_id=885610756]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "szervusz"
+label_settings = SubResource("LabelSettings_lquwl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlimeHealthBar" type="ProgressBar" parent="UI" unique_id=698455894]
+unique_name_in_owner = true
+offset_left = -267.0
+offset_top = 271.0
+offset_right = 264.0
+offset_bottom = 358.0
+theme_override_styles/background = SubResource("StyleBoxTexture_4c57u")
+show_percentage = false
+
+[node name="SlimeHPLabel" type="Label" parent="UI/SlimeHealthBar" unique_id=223671332]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "wassup"
+label_settings = SubResource("LabelSettings_5vw27")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlimeAttackBar" type="ProgressBar" parent="UI" unique_id=658573792]
+unique_name_in_owner = true
+offset_left = -329.0
+offset_top = 363.0
+offset_right = 264.0
+offset_bottom = 434.0
+theme_override_styles/background = SubResource("StyleBoxTexture_dg77c")
+show_percentage = false
+
+[node name="AttackTimer" type="Timer" parent="UI/SlimeAttackBar" unique_id=1363818811]
+unique_name_in_owner = true
+
+[node name="SlimeLabel" type="Label" parent="UI" unique_id=585396580]
+unique_name_in_owner = true
+offset_left = -327.0
+offset_top = 205.0
+offset_right = 264.0
+offset_bottom = 265.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "hello"
+label_settings = SubResource("LabelSettings_7mycd")
+vertical_alignment = 1
+
+[node name="SlHealthL" type="Label" parent="UI" unique_id=189010602]
+offset_left = -430.0
+offset_top = 295.0
+offset_right = -207.0
+offset_bottom = 356.0
+text = "Slime Health:"
+label_settings = SubResource("LabelSettings_ycdy4")
+
+[node name="SlAttL" type="Label" parent="UI" unique_id=1005574895]
+offset_left = -490.0
+offset_top = 378.0
+offset_right = -290.0
+offset_bottom = 427.0
+text = "Slime Attack:"
+label_settings = SubResource("LabelSettings_w48qg")
+clip_text = true
+
+[node name="Popup" type="Label" parent="UI" unique_id=838262771]
+unique_name_in_owner = true
+process_mode = 4
+anchors_preset = -1
+anchor_left = -0.076000005
+anchor_top = -0.07300001
+anchor_right = 0.07300001
+anchor_bottom = 0.076000005
+offset_left = -0.44799805
+offset_top = 0.30400467
+offset_right = -0.0960083
+offset_bottom = -0.24800491
+label_settings = SubResource("LabelSettings_kek77")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="CrystalLabel" type="Label" parent="UI" unique_id=20929286]
+unique_name_in_owner = true
+offset_left = -616.0
+offset_top = -493.0
+offset_right = -392.0
+offset_bottom = -456.0
+theme_override_font_sizes/font_size = 24
+
+[node name="SpecialCrystalLabel" type="Label" parent="UI" unique_id=484749284]
+unique_name_in_owner = true
+offset_left = -388.0
+offset_top = -492.0
+offset_right = -164.0
+offset_bottom = -455.0
+theme_override_font_sizes/font_size = 24
+
+[node name="StatsLabel" type="Label" parent="UI" unique_id=1390037186]
+unique_name_in_owner = true
+offset_left = -878.0
+offset_top = -453.0
+offset_right = -248.0
+offset_bottom = -198.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="ZPrevButton" type="Button" parent="UI" unique_id=609103065]
+unique_name_in_owner = true
+offset_left = -247.0
+offset_top = -250.0
+offset_right = -53.0
+offset_bottom = -196.0
+text = "Previous Zone: (Plains) (Lowest zone currently)"
+autowrap_mode = 2
+
+[node name="ZNextButton" type="Button" parent="UI" unique_id=934543769]
+unique_name_in_owner = true
+offset_left = 49.0
+offset_top = -250.0
+offset_right = 243.0
+offset_bottom = -209.0
+tooltip_text = "Required attack: 25; defense: 20 for next area"
+text = "Next Zone: (Forest)"
+autowrap_mode = 2
+
+[node name="ZoneName" type="Button" parent="UI" unique_id=147993726]
+unique_name_in_owner = true
+offset_left = -53.0
+offset_top = -250.0
+offset_right = 49.0
+offset_bottom = -209.0
+text = "Zone: 
+Plains"
+
+[node name="InfoPopup" type="Label" parent="UI" unique_id=109209876]
+unique_name_in_owner = true
+process_mode = 4
+anchors_preset = -1
+anchor_left = -0.076000005
+anchor_top = -0.07300001
+anchor_right = 0.07300001
+anchor_bottom = 0.076000005
+offset_left = -159.448
+offset_top = -259.69598
+offset_right = 162.90399
+offset_bottom = -302.4
+label_settings = SubResource("LabelSettings_kek77")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="Background" type="TextureRect" parent="." unique_id=1665243032]
+unique_name_in_owner = true
+offset_left = -880.0
+offset_top = -495.0
+offset_right = 881.0
+offset_bottom = 529.0
+texture = ExtResource("6_7mycd")
+
+[node name="Camera2D" type="Camera2D" parent="Background" unique_id=873812450]
+position = Vector2(880, 495)
+zoom = Vector2(0.655, 0.655)
+
+[connection signal="input_event" from="Slime" to="." method="_on_slime_input_event"]
+[connection signal="pressed" from="UI/UpgradeMenu/SaveButton" to="UI" method="_on_save_button_pressed"]
+[connection signal="pressed" from="UI/ZPrevButton" to="." method="_on_z_prev_button_pressed"]
+[connection signal="pressed" from="UI/ZNextButton" to="." method="_on_z_next_button_pressed"]

@@ -1,0 +1,501 @@
+[gd_scene format=3 uid="uid://cojlmnikxkj0m"]
+
+[ext_resource type="Script" uid="uid://canbli241qi3h" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://wbcjoqmuw0uj" path="res://Slime.gd" id="2_h2yge"]
+[ext_resource type="Texture2D" uid="uid://ct814bkrtaiom" path="res://gfx/Monster/Slime.png" id="2_lquwl"]
+[ext_resource type="Script" uid="uid://bvn1rjdlixbix" path="res://UpgradeMenu.gd" id="3_lquwl"]
+[ext_resource type="Texture2D" uid="uid://ctslx70w8cpb4" path="res://gfx/Pause.png" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://diajuv305vw6i" path="res://gfx/Plains.jpg" id="6_7mycd"]
+
+[sub_resource type="GDScript" id="GDScript_1bvp3"]
+script/source = "extends Node2D
+
+@onready var slime_node = %Slime 
+@onready var slime_sprite = %Slime/SlimeSprite
+@onready var slime_hp_bar = %SlimeHealthBar
+@onready var attack_bar = %SlimeAttackBar
+
+var current_slime_hp: int = 0
+var current_slime_data: SlimeData
+
+func _ready():
+	# Start the game with a slime from the current zone
+	spawn_new_slime()
+
+func spawn_new_slime():
+	var zone = GameData.current_zone
+	
+	# 1. Pick a random slime from the zone's list
+	var random_index = randi() % zone.possible_slimes.size()
+	current_slime_data = zone.possible_slimes[random_index]
+	GameData.current_slime = current_slime_data
+	
+	# 2. Reset the health and timer based on the new data
+	current_slime_hp = current_slime_data.health
+	
+	# 3. Update the Visuals of the existing node
+	slime_sprite.texture = current_slime_data.texture
+	slime_hp_bar.max_value = current_slime_data.health
+	slime_hp_bar.value = current_slime_hp
+	
+	# Reset the attack bar (if you use one)
+	attack_bar.max_value = current_slime_data.attack_speed
+	attack_bar.value = current_slime_data.attack_speed
+	
+	# Make sure the slime is visible again
+	slime_node.visible = true
+	print(\"A \" + current_slime_data.name + \" appeared!\")
+
+# Call this function when you click the slime
+func take_damage(amount: int):
+	current_slime_hp -= amount
+	slime_hp_bar.value = current_slime_hp
+	
+	if current_slime_hp <= 0:
+		on_slime_defeated()
+
+func on_slime_defeated():
+	# Hide the slime so it looks like it died
+	slime_node.visible = false
+	
+	# 1. Handle Loot logic
+	var roll = randf()
+	if roll < GameData.get_chest_drop_chance():
+		spawn_chest()
+	else:
+		# Standard crystal drop from SlimeData
+		var crystals = randi_range(current_slime_data.crystal_drop_min, current_slime_data.crystal_drop_max)
+		GameData.slime_crystals += crystals * GameData.current_zone.crystal_multiplier
+	
+	# 2. Wait 0.5s and then just \"Reset\" the same node with new data
+	await get_tree().create_timer(0.5).timeout
+	spawn_new_slime()
+
+func spawn_chest():
+	# Since we aren't instantiating a chest scene, we just show a message or a popup
+	print(\"Chest appeared!\")
+	roll_chest_loot()
+	
+func roll_chest_loot():
+	var special_found = 0
+	var rolls = 3 + (GameData.luck / 20) 
+	for i in range(rolls):
+		if randf() < 0.20:
+			special_found += 1
+			
+	GameData.special_crystals += special_found
+	GameData.slime_crystals += 100 
+	print(\"Found \", special_found, \" Special Crystals!\")
+	
+func _on_pause_button_pressed():
+	get_tree().paused = !get_tree().paused
+	$UI/UpgradeMenu.visible = get_tree().paused
+
+func _on_slime_attack_timer_timeout():
+	# Slime hits player
+	GameData.player_hp -= 10
+	if GameData.player_hp <= 0:
+		get_tree().paused = !get_tree().paused
+		
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1bvp3"]
+size = Vector2(494, 390)
+
+[sub_resource type="LabelSettings" id="LabelSettings_272bh"]
+font_size = 20
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_272bh"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5vw27"]
+texture = SubResource("MeshTexture_272bh")
+modulate_color = Color(0.84925586, 0.13449883, 0.10016311, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_kek77"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4c57u"]
+texture = SubResource("MeshTexture_kek77")
+modulate_color = Color(0.88695055, 0.024736969, 0.08750903, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_efxa6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dg77c"]
+texture = SubResource("MeshTexture_efxa6")
+modulate_color = Color(1, 0.8, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7mycd"]
+font_size = 22
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycdy4"]
+font_size = 24
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w48qg"]
+font_size = 24
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node2D" unique_id=230458472]
+script = ExtResource("1_ig7tw")
+
+[node name="Slime" type="Area2D" parent="." unique_id=148509787]
+unique_name_in_owner = true
+z_index = 5
+script = SubResource("GDScript_1bvp3")
+
+[node name="SlimeSprite" type="Sprite2D" parent="Slime" unique_id=2128961338]
+unique_name_in_owner = true
+z_index = 1
+z_as_relative = false
+position = Vector2(-3.5762787e-06, 1.0550022e-05)
+scale = Vector2(0.48242188, 0.3808594)
+texture = ExtResource("2_lquwl")
+
+[node name="AttackZone" type="CollisionShape2D" parent="Slime" unique_id=21614607]
+unique_name_in_owner = true
+z_index = 5
+shape = SubResource("RectangleShape2D_1bvp3")
+script = ExtResource("2_h2yge")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=406937001]
+process_mode = 3
+follow_viewport_enabled = true
+
+[node name="HUD" type="Control" parent="UI" unique_id=2097296223]
+clip_contents = true
+layout_mode = 3
+anchor_left = -0.763
+anchor_top = -0.762
+anchor_right = 0.763
+anchor_bottom = 0.762
+offset_left = -0.023986816
+offset_top = -0.22399902
+offset_right = 0.023986816
+offset_bottom = 0.22399902
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="UpgradeMenu" type="Panel" parent="UI" unique_id=852211691]
+z_index = 1
+clip_contents = true
+offset_left = 277.0
+offset_top = -494.0
+offset_right = 879.0
+offset_bottom = 494.0
+script = ExtResource("3_lquwl")
+
+[node name="WeaponLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1143218855]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 435.0
+offset_bottom = 31.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="WeaponUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1078709394]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 31.0
+offset_right = 435.0
+offset_bottom = 57.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="WeaponTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=1533945238]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 398.268
+offset_top = 1.0
+offset_right = 448.79
+offset_bottom = 21.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="WeaponLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=2119814546]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 1.0
+offset_right = 536.79
+offset_bottom = 20.132
+text = "Level up"
+
+[node name="HelmetLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1778314248]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 85.0
+offset_right = 435.0
+offset_bottom = 116.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="HelmetUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=325411565]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 116.0
+offset_right = 435.0
+offset_bottom = 142.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="HelmetTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=511331145]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 84.0
+offset_right = 448.79
+offset_bottom = 106.131996
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="HelmetLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=1331846113]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 84.0
+offset_right = 537.79
+offset_bottom = 106.131996
+text = "Level up"
+
+[node name="ChestpieceLabel" type="Label" parent="UI/UpgradeMenu" unique_id=127855950]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 170.0
+offset_right = 435.0
+offset_bottom = 201.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="ChestpieceUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=1282324204]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 201.0
+offset_right = 435.0
+offset_bottom = 227.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="ChestpieceTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=1061716567]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 169.0
+offset_right = 448.79
+offset_bottom = 191.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="ChestpieceLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=1602613642]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 169.0
+offset_right = 537.79
+offset_bottom = 191.132
+text = "Level up"
+
+[node name="LeggingsLabel" type="Label" parent="UI/UpgradeMenu" unique_id=108637333]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 250.0
+offset_right = 435.0
+offset_bottom = 281.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="LeggingsUpgLabel" type="Label" parent="UI/UpgradeMenu" unique_id=748374796]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 281.0
+offset_right = 435.0
+offset_bottom = 307.0
+text = "asd"
+autowrap_mode = 2
+
+[node name="LeggingsTierUp" type="Button" parent="UI/UpgradeMenu" unique_id=920261392]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 396.268
+offset_top = 249.0
+offset_right = 448.79
+offset_bottom = 271.132
+text = "Tier up"
+autowrap_trim_flags = 192
+clip_text = true
+
+[node name="LeggingsLevelUp" type="Button" parent="UI/UpgradeMenu" unique_id=322302831]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.066
+anchor_right = 0.105000004
+anchor_bottom = 0.011000001
+offset_left = 474.268
+offset_top = 249.0
+offset_right = 537.79
+offset_bottom = 271.132
+text = "Level up"
+
+[node name="PauseButton" type="Button" parent="UI/UpgradeMenu" unique_id=1480137156]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 0
+offset_left = 1.0
+offset_top = 852.0
+offset_right = 137.0
+offset_bottom = 988.0
+icon = ExtResource("5_7mycd")
+
+[node name="Info1" type="Label" parent="UI/UpgradeMenu" unique_id=694236091]
+layout_mode = 0
+offset_top = 494.0
+offset_right = 602.0
+offset_bottom = 610.0
+text = "NOTE: Weapon increases your damage, Helmet increases armor, and luck, chestpiece increases your defense also and max health, leggings is simply armor."
+label_settings = SubResource("LabelSettings_272bh")
+autowrap_mode = 2
+clip_text = true
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="UI" unique_id=1197304688]
+unique_name_in_owner = true
+offset_left = -878.0
+offset_top = -493.0
+offset_right = -631.0
+offset_bottom = -456.0
+theme_override_styles/background = SubResource("StyleBoxTexture_5vw27")
+
+[node name="SlimeHealthBar" type="ProgressBar" parent="UI" unique_id=698455894]
+unique_name_in_owner = true
+offset_left = -267.0
+offset_top = 271.0
+offset_right = 264.0
+offset_bottom = 358.0
+theme_override_styles/background = SubResource("StyleBoxTexture_4c57u")
+
+[node name="SlimeAttackBar" type="ProgressBar" parent="UI" unique_id=658573792]
+unique_name_in_owner = true
+offset_left = -329.0
+offset_top = 363.0
+offset_right = 264.0
+offset_bottom = 434.0
+theme_override_styles/background = SubResource("StyleBoxTexture_dg77c")
+show_percentage = false
+
+[node name="AttackTimer" type="Timer" parent="UI/SlimeAttackBar" unique_id=1363818811]
+unique_name_in_owner = true
+
+[node name="SlimeLabel" type="Label" parent="UI" unique_id=585396580]
+unique_name_in_owner = true
+offset_left = -327.0
+offset_top = 205.0
+offset_right = 264.0
+offset_bottom = 265.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "hello"
+label_settings = SubResource("LabelSettings_7mycd")
+vertical_alignment = 1
+
+[node name="PlayerHPLabel" type="Label" parent="UI" unique_id=885610756]
+offset_left = -878.0
+offset_top = -456.0
+offset_right = -838.0
+offset_bottom = -433.0
+
+[node name="SlHealthL" type="Label" parent="UI" unique_id=189010602]
+offset_left = -490.0
+offset_top = 287.0
+offset_right = -267.0
+offset_bottom = 348.0
+text = "Slime Health:"
+label_settings = SubResource("LabelSettings_ycdy4")
+
+[node name="SlAttL" type="Label" parent="UI" unique_id=1005574895]
+offset_left = -532.0
+offset_top = 377.0
+offset_right = -332.0
+offset_bottom = 426.0
+text = "Slime Attack:"
+label_settings = SubResource("LabelSettings_w48qg")
+clip_text = true
+
+[node name="DamagePopup" type="Label" parent="UI" unique_id=838262771]
+unique_name_in_owner = true
+offset_right = 50.0
+offset_bottom = 31.0
+clip_text = true
+
+[node name="CrystalLabel" type="Label" parent="UI" unique_id=20929286]
+unique_name_in_owner = true
+offset_left = -616.0
+offset_top = -493.0
+offset_right = -392.0
+offset_bottom = -456.0
+theme_override_font_sizes/font_size = 24
+
+[node name="SpecialCrystalLabel" type="Label" parent="UI" unique_id=484749284]
+unique_name_in_owner = true
+offset_left = -388.0
+offset_top = -492.0
+offset_right = -164.0
+offset_bottom = -455.0
+theme_override_font_sizes/font_size = 24
+
+[node name="StatsLabel" type="Label" parent="UI" unique_id=1390037186]
+unique_name_in_owner = true
+offset_left = -878.0
+offset_top = -453.0
+offset_right = -248.0
+offset_bottom = -198.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="Background2" type="TextureRect" parent="." unique_id=1665243032]
+offset_left = -880.0
+offset_top = -495.0
+offset_right = 881.0
+offset_bottom = 529.0
+texture = ExtResource("6_7mycd")
+
+[node name="Camera2D" type="Camera2D" parent="Background2" unique_id=873812450]
+position = Vector2(880, 495)
+zoom = Vector2(0.655, 0.655)
+
+[connection signal="input_event" from="Slime" to="." method="_on_slime_input_event"]
